@@ -7,15 +7,77 @@
   'use strict';
 
   /* ─── DOM References ─── */
-  var preloader   = document.getElementById('preloader');
-  var page        = document.getElementById('page');
-  var paths       = document.querySelectorAll('.preloader-path');
-  var subtitle    = document.querySelector('.preloader-subtitle');
-  var glow        = document.querySelector('.preloader-glow');
-  var progressBar = document.querySelector('.preloader-progress');
-  var progressFill= document.querySelector('.preloader-progress-fill');
+  var preloader      = document.getElementById('preloader');
+  var page           = document.getElementById('page');
+  var paths          = document.querySelectorAll('.preloader-path');
+  var subtitle       = document.querySelector('.preloader-subtitle');
+  var glow           = document.querySelector('.preloader-glow');
+  var progressBar    = document.querySelector('.preloader-progress');
+  var progressFill   = document.querySelector('.preloader-progress-fill');
+  var themeToggleBtn = document.getElementById('theme-toggle');
+  var metaThemeColor = document.getElementById('theme-color-meta');
 
-  /* ─── Preloader Animation ─── */
+
+  /* ═══════════════════════════════════════════════════════════
+     THEME CONTROLLER (Dark / Light)
+     ═══════════════════════════════════════════════════════════ */
+
+  function getSystemTheme() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches
+      ? 'light'
+      : 'dark';
+  }
+
+  function applyTheme(theme, save) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (save) {
+      localStorage.setItem('h2j_theme', theme);
+    }
+
+    // Sync browser UI theme-color
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', theme === 'light' ? '#F8FBFC' : '#0A0A0A');
+    }
+  }
+
+  function initTheme() {
+    var saved = localStorage.getItem('h2j_theme');
+    var activeTheme = saved ? saved : getSystemTheme();
+    applyTheme(activeTheme, false);
+
+    // Listen to OS theme changes if user hasn't explicitly chosen
+    if (window.matchMedia) {
+      var colorSchemeQuery = window.matchMedia('(prefers-color-scheme: light)');
+      colorSchemeQuery.addEventListener('change', function (e) {
+        if (!localStorage.getItem('h2j_theme')) {
+          applyTheme(e.matches ? 'light' : 'dark', false);
+        }
+      });
+    }
+
+    // Toggle button handler
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', function () {
+        var current = document.documentElement.getAttribute('data-theme') || 'dark';
+        var next = current === 'dark' ? 'light' : 'dark';
+        applyTheme(next, true);
+
+        // GTM Tracking for theme toggle
+        if (window.dataLayer) {
+          window.dataLayer.push({
+            event: 'theme_change',
+            theme: next
+          });
+        }
+      });
+    }
+  }
+
+
+  /* ═══════════════════════════════════════════════════════════
+     PRELOADER ANIMATION
+     ═══════════════════════════════════════════════════════════ */
+
   function initPreloader() {
     // 1. Activate ambient glow
     if (glow) glow.classList.add('visible');
@@ -47,7 +109,7 @@
         path.style.strokeDashoffset = '0';
       }, delay);
 
-      // 5. After stroke completes → fill in
+      // 5. After stroke completes → fill in based on active theme
       setTimeout(function () {
         path.style.transition =
           'fill-opacity 0.55s ease, stroke-opacity 0.55s ease';
@@ -78,7 +140,10 @@
   }
 
 
-  /* ─── GTM DataLayer Event Tracking ─── */
+  /* ═══════════════════════════════════════════════════════════
+     GTM DATALAYER EVENT TRACKING
+     ═══════════════════════════════════════════════════════════ */
+
   function initTracking() {
     var links = document.querySelectorAll('.link-btn');
 
@@ -97,30 +162,37 @@
   }
 
 
-  /* ─── Keyboard Accessibility ─── */
+  /* ═══════════════════════════════════════════════════════════
+     KEYBOARD ACCESSIBILITY
+     ═══════════════════════════════════════════════════════════ */
+
   function initA11y() {
-    document.querySelectorAll('.link-btn').forEach(function (btn) {
-      btn.addEventListener('keydown', function (e) {
+    document.querySelectorAll('.link-btn, .theme-toggle').forEach(function (el) {
+      el.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          btn.click();
+          el.click();
         }
       });
     });
   }
 
 
-  /* ─── Boot ─── */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      initPreloader();
-      initTracking();
-      initA11y();
-    });
-  } else {
+  /* ═══════════════════════════════════════════════════════════
+     BOOT
+     ═══════════════════════════════════════════════════════════ */
+
+  function start() {
+    initTheme();
     initPreloader();
     initTracking();
     initA11y();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
   }
 
 })();

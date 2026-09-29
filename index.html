@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="H2J Growth Company — Consultoria de crescimento. Estratégia, Performance, Tecnologia e Crescimento para empresas que querem escalar.">
-  <meta name="theme-color" content="#0A0A0A">
+  <meta name="theme-color" content="#0A0A0A" id="theme-color-meta">
 
   <!-- Open Graph -->
   <meta property="og:title" content="H2J Growth Company — Links">
@@ -13,10 +13,20 @@
   <meta property="og:url" content="https://link.h2jcompany.com.br">
   <meta property="og:image" content="img/Logotipo 9.png">
 
-  <!-- Favicon (inline SVG fallback) -->
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="img/logo-h2j.svg">
 
   <title>H2J Growth Company — Links</title>
+
+  <!-- Script inline para detecção imediata de tema (evita flash) -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('h2j_theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = saved ? saved : (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 
   <!-- ═══════════════════════════════════════════════════════
        Google Tag Manager — substituir GTM-XXXXXXX pelo ID real
@@ -41,6 +51,27 @@
       height="0" width="0" style="display:none;visibility:hidden"></iframe>
   </noscript>
 
+  <!-- ═══════════════════════════════════════════════════════
+       THEME TOGGLE BUTTON
+       ═══════════════════════════════════════════════════════ -->
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Alternar entre modo claro e escuro">
+    <!-- Sun icon (shown in dark mode) -->
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <!-- Moon icon (shown in light mode) -->
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
 
   <!-- ═══════════════════════════════════════════════════════
        PRELOADER
@@ -56,23 +87,16 @@
 
       <!-- Shape 1 — geometric mark (left) -->
       <path class="preloader-path"
-            d="M568.69,450.57 L568.69,530.27 L497.48,592.32 L497.48,635.77 L425.73,689.52 L425.73,385.13 L498.55,385.13 L497.45,509.25 Z"
-            fill="#F5F5F5"
-            stroke="#C45A1C"
-            stroke-width="2"/>
+            d="M568.69,450.57 L568.69,530.27 L497.48,592.32 L497.48,635.77 L425.73,689.52 L425.73,385.13 L498.55,385.13 L497.45,509.25 Z"/>
 
       <!-- Shape 2 — curved mark (right) -->
       <path class="preloader-path"
-            d="M653.84,601.18c-.15,51.8-53.38,93.69-110.58,93.69h-29.65v-59.1c7.01-.94,15.15-2.64,23.86-5.69.23-.08.47-.16.7-.24,25.92-9.26,43.37-31.2,45.77-56.05.21-1.96.31-3.96.31-5.95v-150.9l69.59-31.8c.81-.73.28,122.97,0,216.05Z"
-            fill="#F5F5F5"
-            stroke="#C45A1C"
-            stroke-width="2"/>
+            d="M653.84,601.18c-.15,51.8-53.38,93.69-110.58,93.69h-29.65v-59.1c7.01-.94,15.15-2.64,23.86-5.69.23-.08.47-.16.7-.24,25.92-9.26,43.37-31.2,45.77-56.05.21-1.96.31-3.96.31-5.95v-150.9l69.59-31.8c.81-.73.28,122.97,0,216.05Z"/>
 
       <!-- Subtitle -->
       <text class="preloader-subtitle"
             x="540" y="735"
             text-anchor="middle"
-            fill="#7A7A7A"
             font-family="Sora, sans-serif"
             font-size="20"
             font-weight="300"
@@ -173,7 +197,7 @@
       </nav>
 
       <!-- Footer -->
-      <p class="footer">© 2025 H2J Growth Company</p>
+      <p class="footer">© 2026 H2J Growth Company</p>
 
     </div>
   </main>
